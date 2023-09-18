@@ -1,7 +1,8 @@
 let bigCookie = document.getElementById('bigCookie');
+alert('test1')
 
 do {
-    bigCookie.click();
+    //bigCookie.click();
     setTimeout(() => {
           bigCookie.click();
         }, 100);

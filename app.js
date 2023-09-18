@@ -1,5 +1,5 @@
 let bigCookie = document.getElementById('bigCookie');
-alert('test1')
+alert('test2')
 
 do {
     //bigCookie.click();

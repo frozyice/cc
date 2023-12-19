@@ -10,26 +10,23 @@ var autoclicker = setInterval(function(){
   try {
     
     if (isAcending()) {
-      trainDragon();
-      seasonValentines();
-      seasonEaster();
+      ascend();
       return;
     }
-
-    //clickBigCookie();
-    //buyUpgrade();
-    //buyBuilding();
+    clickBigCookie();
+    buyUpgrade();
+    buyBuilding();
     clickGoldenCookie();
     clickFortune();
     castSpell();
-    stockMarket();
+    //stockMarket();
  
   } catch (err) {
     console.error('Stopping auto clicker');
     clearInterval(autoclicker);
     throw(err);
   }
-}, 60000);
+}, 1);
 // 1 default, 60000 for stockmarket
 
 function clickBigCookie() {
@@ -91,7 +88,60 @@ function isReincarnating() {
 }
 
 function isAcending() {
-  return !isReincarnating() && (!isDragonTrained() || !isValentinesUpgraded() || !isEasterUpgraded());
+  return !isReincarnating() && (!isDragonTrained() || !isValentinesUpgraded() || !isEasterUpgraded() || !isHalloweenUpgraded());
+}
+
+function isHalloweenUpgraded() {
+  return Game.GetHowManyHalloweenDrops() === 7;
+}
+
+function seasonHalloween() {
+  let halloweenSwitch = document.querySelector('[data-id="183"]');
+
+  if (Game.season === '' && halloweenSwitch.classList.contains('enabled')) {
+    halloweenSwitch.click();
+  }
+
+  let grandmaUpgrade = document.getElementById('techUpgrades').children[0] ?? document.getElementById('vaultUpgrades').children[0];
+  if (grandmaUpgrade?.classList.contains('enabled')) {
+    grandmaUpgrade.click();
+    document.getElementById('promptOption0')?.click();
+  }
+
+  Game.PopRandomWrinkler();
+  
+  clickBigCookie();
+  buyUpgrade();
+  buyBuilding(10);
+  clickGoldenCookie();
+  clickFortune();
+  castSpell();
+
+  if (isHalloweenUpgraded()) {
+    halloweenSwitch.click();
+  }
+}
+
+function ascend() {
+  if (!isHalloweenUpgraded()) {
+    seasonHalloween();
+    return;
+  }
+
+  if (!isDragonTrained()) {
+    trainDragon();
+    return;
+  }
+
+  if (!isValentinesUpgraded()) {
+    seasonValentines();
+    return;
+  }
+
+  if (!isEasterUpgraded()) {
+    seasonEaster();
+    return;
+  }
 }
 
 function isDragonTrained() {
@@ -100,10 +150,6 @@ function isDragonTrained() {
 
 
 function trainDragon() {
-  if (isDragonTrained()) {
-    return;
-  }
-
   clickBigCookie();
   buyUpgrade();
   clickGoldenCookie();
@@ -167,10 +213,6 @@ function isValentinesUpgraded() {
 }
 
 function seasonValentines() {
-  if (!isDragonTrained() || isValentinesUpgraded()) {
-    return;
-  }
-
   let valentinesSwitch = document.querySelector('[data-id="184"]');
 
   if (Game.season === '' && valentinesSwitch.classList.contains('enabled')) {
@@ -194,11 +236,6 @@ function isEasterUpgraded() {
 }
 
 function seasonEaster(){
-  if (!isDragonTrained() || isEasterUpgraded()) {
-    return;
-  }
-
-  
   let easterSwitch = document.querySelector('[data-id="209"]');
   
   if (Game.season === '' && easterSwitch.classList.contains('enabled')) {

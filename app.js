@@ -1,3 +1,4 @@
+
 const uniqueBuildings = 20;
 const dragonflightAura = 10;
 const radiantAppetiteAura = 15;
@@ -6,7 +7,7 @@ const radiantAppetiteAura = 15;
 let holdBuyingBuildingsOnGoldenCookie = true;
 let defaultBuildingLimit = 700;
 
-var autoclicker = setInterval(function(){
+var autoclicker = setInterval(function() {
   try {
     
     if (isAcending()) {
@@ -98,13 +99,14 @@ function isAcending() {
 }
 
 function ascend() {
-  if (!isChristmasUpgraded()) {
-    seasonChristmas();
-    return;
-  }
-
+  
   if (!isHalloweenUpgraded()) {
     seasonHalloween();
+    return;
+  }
+  
+  if (!isChristmasUpgraded()) {
+    seasonChristmas();
     return;
   }
 
@@ -131,7 +133,7 @@ function isHalloweenUpgraded() {
 function seasonHalloween() {
   let halloweenSwitch = document.querySelector('[data-id="183"]');
 
-  if (halloweenSwitch.classList.contains('enabled')) {
+  if (Game.season !== 'halloween' && halloweenSwitch.classList.contains('enabled')) {
     halloweenSwitch.click();
   }
 
@@ -149,12 +151,22 @@ function seasonHalloween() {
   let grandmaUpgrade = document.getElementById('techUpgrades').children[0] ?? document.getElementById('vaultUpgrades').children[0];
   if (grandmaUpgrade?.classList.contains('enabled')) {
     grandmaUpgrade.click();
-    document.getElementById('promptOption0')?.click();
+    if (document.getElementById('prompt')?.innerHTML.includes('purchasing this will have unexpected, and potentially undesirable results!')) {
+      document.getElementById('promptOption0')?.click();
+    }
   }
 
-  Game.PopRandomWrinkler();
+  if (Game.wrinklers.filter((w) => w.close === 1).length > 5) {
+    Game.PopRandomWrinkler();
+  }
 
-  if (isHalloweenUpgraded()) {
+  //todo const data-id
+  if (document.querySelector('[data-id="85"]') !== null) {
+    document.querySelector('[data-id="74"]')?.click();
+    document.querySelector('[data-id="84"]')?.click();
+  }
+
+  if (Game.season === 'halloween' && isHalloweenUpgraded()) {
     halloweenSwitch.click();
   }
 }
@@ -167,7 +179,7 @@ function isChristmasUpgraded() {
 
 function seasonChristmas() {
   let christmasSwitch = document.querySelector('[data-id="182"]');
-  if (christmasSwitch.classList.contains('enabled')) {
+  if (Game.season !== 'christmas' && christmasSwitch.classList.contains('enabled')) {
     christmasSwitch.click();
   }
   
@@ -186,7 +198,7 @@ function seasonChristmas() {
   Game.specialTab = 'dragon'
   Game.ToggleSpecialMenu();
   
-  if (isChristmasUpgraded()) {
+  if (Game.season === 'christmas' && isChristmasUpgraded()) {
     christmasSwitch.click();
   }
 }
@@ -261,7 +273,7 @@ function isValentinesUpgraded() {
 function seasonValentines() {
   let valentinesSwitch = document.querySelector('[data-id="184"]');
 
-  if (valentinesSwitch.classList.contains('enabled')) {
+  if (Game.season !== 'valentines' && valentinesSwitch.classList.contains('enabled')) {
     valentinesSwitch.click();
   }
   
@@ -272,7 +284,7 @@ function seasonValentines() {
   clickFortune();
   castSpell();
 
-  if (isValentinesUpgraded()) {
+  if (Game.season === 'valentines' && isValentinesUpgraded()) {
       valentinesSwitch.click();
   }
 }
@@ -284,7 +296,7 @@ function isEasterUpgraded() {
 function seasonEaster(){
   let easterSwitch = document.querySelector('[data-id="209"]');
   
-  if (easterSwitch.classList.contains('enabled')) {
+  if (Game.season !== 'easter' && easterSwitch.classList.contains('enabled')) {
     easterSwitch.click();
   }
   
@@ -295,7 +307,7 @@ function seasonEaster(){
   clickFortune();
   castSpell();
 
-  if (isEasterUpgraded()) {
+  if (Game.season === 'easter' && isEasterUpgraded()) {
       easterSwitch.click();
   }
 }

@@ -1,4 +1,5 @@
 
+// todo logimine, sest seasonite switchid ei  (kas võib olla early returni issue?)
 const uniqueBuildings = 20;
 const dragonflightAura = 10;
 const radiantAppetiteAura = 15;
@@ -160,14 +161,26 @@ function seasonHalloween() {
     Game.PopRandomWrinkler();
   }
 
-  //todo const data-id
-  if (document.querySelector('[data-id="85"]') !== null) {
-    document.querySelector('[data-id="74"]')?.click();
-    document.querySelector('[data-id="84"]')?.click();
+  
+  let store = document.getElementById('store')
+
+  let elderPledge = store.querySelector('[data-id="74"]');
+  let elderCovenant = store.querySelector('[data-id="84"]');
+  let revokeElderCovenant = store.querySelector('[data-id="85"]');
+ 
+  if (elderCovenant === null) {
+    elderPledge?.click();
   }
 
-  if (Game.season === 'halloween' && isHalloweenUpgraded()) {
+  if (!elderPledge?.classList.contains('enabled')) {
+    elderCovenant?.click();
+  }
+
+  revokeElderCovenant?.click();
+  
+  if (Game.season === 'halloween' && isHalloweenUpgraded() && elderCovenant !== null) {
     halloweenSwitch.click();
+    elderCovenant.click();
   }
 }
 
@@ -290,7 +303,8 @@ function seasonValentines() {
 }
 
 function isEasterUpgraded() {
-  return Game.GetHowManyEggs() === 19 && document.querySelector('[data-id="227"]') !== null;
+  let chocolateEgg = document.querySelector('[data-id="227"]');
+  return Game.GetHowManyEggs() === 19 && chocolateEgg !== null;
 }
 
 function seasonEaster(){

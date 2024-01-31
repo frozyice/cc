@@ -1,12 +1,12 @@
 
-// todo logimine, sest seasonite switchid ei  (kas võib olla early returni issue?)
 const uniqueBuildings = 20;
 const dragonflightAura = 10;
 const radiantAppetiteAura = 15;
 
 // conf
-let holdBuyingBuildingsOnGoldenCookie = true;
-let defaultBuildingLimit = 700;
+const holdBuyingBuildingsOnGoldenCookie = true;
+const defaultBuildingLimit = 700;
+const stockmarketEnabled = false;
 
 var autoclicker = setInterval(function() {
   try {
@@ -21,15 +21,17 @@ var autoclicker = setInterval(function() {
     clickGoldenCookie();
     clickFortune();
     castSpell();
-    //stockMarket();
+    if (stockmarketEnabled)
+    {
+      stockMarket();
+    }
  
   } catch (err) {
     console.error('Stopping auto clicker');
     clearInterval(autoclicker);
     throw(err);
   }
-}, 1);
-// 1 default, 60000 for stockmarket
+}, stockmarketEnabled ? 60000 : 1);
 
 function clickBigCookie() {
   Game.lastClick -= 1000;

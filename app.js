@@ -108,6 +108,11 @@ function ascend() {
     return;
   }
 
+  if (!isValentinesUpgraded()) {
+    seasonValentines();
+    return;
+  }
+  
   if (!isChristmasUpgraded()) {
     seasonChristmas();
     return;
@@ -115,11 +120,6 @@ function ascend() {
 
   if (!isHalloweenUpgraded()) {
     seasonHalloween();
-    return;
-  }
-
-  if (!isValentinesUpgraded()) {
-    seasonValentines();
     return;
   }
 
@@ -142,14 +142,15 @@ function seasonHalloween() {
 
   clickBigCookie();
   buyUpgrade();
-  buyBuilding();
   clickGoldenCookie();
   clickFortune();
   castSpell();
-
+  
   if (Game.season !== 'halloween') {
     return;
   }
+
+  buyBuilding();
 
   let grandmaUpgrade = document.getElementById('techUpgrades').children[0] ?? document.getElementById('vaultUpgrades').children[0];
   if (grandmaUpgrade?.classList.contains('enabled')) {
@@ -200,14 +201,15 @@ function seasonChristmas() {
   
   clickBigCookie();
   buyUpgrade();
-  buyBuilding();
   clickGoldenCookie();
   clickFortune();
   castSpell();
-
+  
   if (Game.season !== 'christmas') {
     return;
   }
+
+  buyBuilding();
 
   Game.UpgradeSanta();
   Game.specialTab = 'dragon'
@@ -294,10 +296,15 @@ function seasonValentines() {
   
   clickBigCookie();
   buyUpgrade();
-  buyBuilding();
   clickGoldenCookie();
   clickFortune();
   castSpell();
+  
+  if (Game.season !== 'valentines') {
+    return;
+  }
+
+  buyBuilding();
 
   if (Game.season === 'valentines' && isValentinesUpgraded()) {
       valentinesSwitch.click();
@@ -318,11 +325,16 @@ function seasonEaster(){
   
   clickBigCookie();
   buyUpgrade();
-  buyBuilding();
   clickGoldenCookie();
   clickFortune();
   castSpell();
-
+  
+  if (Game.season !== 'easter') {
+    return;
+  }
+  
+  buyBuilding();
+  
   if (Game.season === 'easter' && isEasterUpgraded()) {
       easterSwitch.click();
   }

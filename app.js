@@ -2,13 +2,14 @@
 const uniqueBuildings = 20;
 const dragonflightAura = 10;
 const radiantAppetiteAura = 15;
-
-// conf
-const holdBuyingBuildingsOnGoldenCookie = true;
-const defaultBuildingLimit = 700;
-const stockmarketEnabled = false;
-
 const seasonSwitches = document.querySelector('#toggleUpgrades');
+
+let config = {
+  holdBuyingBuildingsOnGoldenCookie: true,
+  defaultBuildingLimit: 700,
+  isStockmarketEnabled: false,
+  isBuyUpgradeEnabled: true
+}
 
 let autoclicker = setInterval(function() {
   try {
@@ -23,17 +24,14 @@ let autoclicker = setInterval(function() {
     clickGoldenCookie();
     clickFortune();
     castSpell();
-    if (stockmarketEnabled)
-    {
-      stockMarket();
-    }
+    stockMarket();
  
   } catch (err) {
     console.error('Stopping auto clicker');
     clearInterval(autoclicker);
     throw(err);
   }
-}, stockmarketEnabled ? 60000 : 1);
+}, config.isStockmarketEnabled ? 60000 : 1);
 
 function clickBigCookie() {
   Game.lastClick -= 1000;
@@ -41,6 +39,10 @@ function clickBigCookie() {
 }
 
 function buyUpgrade() {
+  if (!config.isBuyUpgradeEnabled) {
+    return;
+  }
+
   let upgrades = document.getElementById('upgrades');
   let enabledUpgrades = Array.from(upgrades.getElementsByClassName('upgrade')).filter((each) => {
     return (each.classList.contains('enabled'))
@@ -48,11 +50,12 @@ function buyUpgrade() {
   enabledUpgrades.shift()?.click();
 }
 
-function buyBuilding(limit = defaultBuildingLimit) {
-  if (holdBuyingBuildingsOnGoldenCookie && hasActiveGoldenCookie())
+function buyBuilding(limit = config.defaultBuildingLimit) {
+  if (config.holdBuyingBuildingsOnGoldenCookie && hasActiveGoldenCookie())
   {
     return;
   }
+
   let buildings = Array.from(document.getElementsByClassName('product')).filter((each) => {
     let ownedBuildings = parseInt(each.getElementsByClassName('owned')[0].innerText);
     ownedBuildings = Number.isNaN(ownedBuildings) ? 0 : ownedBuildings;
@@ -332,6 +335,10 @@ function seasonEaster(){
 }
 
 function stockMarket(){
+  if (!config.isStockmarketEnabled) {
+    return;
+  }
+
   const thresholdAboveRestingValue = 0;
   const thresholdBelowRestingValue = 999;
   const minBuyPrice = 10;

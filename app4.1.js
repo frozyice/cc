@@ -8,14 +8,15 @@ const holdBuyingBuildingsOnGoldenCookie = true;
 const defaultBuildingLimit = 700;
 const stockmarketEnabled = false;
 
-var autoclicker = setInterval(function() {
+const seasonSwitches = document.querySelector('#toggleUpgrades');
+
+let autoclicker = setInterval(function() {
   try {
     
     if (isAcending()) {
       ascend();
       return;
     }
-    console.log('end of accend!')
     clickBigCookie();
     buyUpgrade();
     buyBuilding();
@@ -114,15 +115,16 @@ function ascend() {
     return;
   }
   
+  if (!isHalloweenUpgraded()) {
+    seasonHalloween();
+    return;
+  }
+
   if (!isChristmasUpgraded()) {
     seasonChristmas();
     return;
   }
 
-  if (!isHalloweenUpgraded()) {
-    seasonHalloween();
-    return;
-  }
 
   if (!isEasterUpgraded()) {
     seasonEaster();
@@ -135,7 +137,7 @@ function isHalloweenUpgraded() {
 }
 
 function seasonHalloween() {
-  let halloweenSwitch = document.querySelector('[data-id="183"]');
+  let halloweenSwitch = seasonSwitches.querySelector('[data-id="183"]');
 
   if (Game.season !== 'halloween' && halloweenSwitch.classList.contains('enabled')) {
     halloweenSwitch.click();
@@ -192,7 +194,7 @@ function isChristmasUpgraded() {
 }
 
 function seasonChristmas() {
-  let christmasSwitch = document.querySelector('[data-id="182"]');
+  let christmasSwitch = seasonSwitches.querySelector('[data-id="182"]');
   if (Game.season !== 'christmas' && christmasSwitch.classList.contains('enabled')) {
     christmasSwitch.click();
   }
@@ -283,7 +285,7 @@ function isValentinesUpgraded() {
 }
 
 function seasonValentines() {
-  let valentinesSwitch = document.querySelector('[data-id="184"]');
+  let valentinesSwitch = seasonSwitches.querySelector('[data-id="184"]');
 
   if (Game.season !== 'valentines' && valentinesSwitch.classList.contains('enabled')) {
     valentinesSwitch.click();
@@ -309,7 +311,7 @@ function isEasterUpgraded() {
 }
 
 function seasonEaster(){
-  let easterSwitch = document.querySelector('[data-id="209"]');
+  let easterSwitch = seasonSwitches.querySelector('[data-id="209"]');
   
   if (Game.season !== 'easter' && easterSwitch.classList.contains('enabled')) {
     easterSwitch.click();
